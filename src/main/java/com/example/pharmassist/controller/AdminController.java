@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.pharmassist.exceptionhandler.FieldErrorExceptionHandler;
 import com.example.pharmassist.requestdtos.AdminRequest;
 import com.example.pharmassist.responsedtos.AdminResponse;
 import com.example.pharmassist.service.AdminService;
@@ -48,11 +50,32 @@ public class AdminController {
 			content = {
 					@Content(schema = @Schema(implementation = ErrorStructure.class))
 			})
-})
+    })
 	public ResponseEntity<ResponseStructure<AdminResponse>> findUser(@PathVariable String adminId)
 	{
 		AdminResponse adminResponse=adminService.findAdmin(adminId);
 		return appResponseBuilder.success(HttpStatus.FOUND,"Admin is found",adminResponse);
 	}
+	
+	
+	@PutMapping("/admins/{adminId}")
+	@Operation(description = "The endpoint can be used to update the admin based on the unique ID",
+	responses = {
+			@ApiResponse(responseCode = "302",description = "Admin Found"),
+			@ApiResponse(responseCode = "400",description = "Bad Request",
+			content= {
+					@Content(schema= @Schema(implementation = FieldErrorExceptionHandler.class))
+			}),
+			@ApiResponse(responseCode = "404",description = "Admin not found by ID",
+			content = {
+					@Content(schema = @Schema(implementation = ErrorStructure.class))
+			})
+    })
+	public ResponseEntity<ResponseStructure<AdminResponse>> updateUser(@RequestBody AdminRequest adminRequest,@PathVariable String adminId)
+	{
+		AdminResponse adminResponse= adminService.updateAdmin(adminRequest, adminId);
+		return appResponseBuilder.success(HttpStatus.OK,"Admin Updated", adminResponse);
+	}
+
 
 }
