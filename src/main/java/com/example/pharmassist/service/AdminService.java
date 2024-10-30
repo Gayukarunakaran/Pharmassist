@@ -3,6 +3,7 @@ package com.example.pharmassist.service;
 import org.springframework.stereotype.Service;
 
 import com.example.pharmassist.entity.Admin;
+import com.example.pharmassist.exception.AdminNotFoundByIdException;
 import com.example.pharmassist.mapper.AdminMapper;
 import com.example.pharmassist.repository.AdminRepository;
 import com.example.pharmassist.requestdtos.AdminRequest;
@@ -25,6 +26,14 @@ public class AdminService {
 		
 		Admin admin=adminRepository.save(adminMapper.mapToAdmin(adminRequest, new Admin()));
 		return adminMapper.mapToAdminResponse(admin);
+	}
+
+	public AdminResponse findAdmin(String adminId) {
+		{
+			return adminRepository.findById(adminId)
+					.map(adminMapper::mapToAdminResponse)
+					.orElseThrow(() -> new AdminNotFoundByIdException("Failed to Find Admin"));
+		}
 	}
 
 }
