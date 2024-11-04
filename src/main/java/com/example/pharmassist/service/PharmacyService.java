@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import com.example.pharmassist.entity.Admin;
 import com.example.pharmassist.entity.Pharmacy;
 import com.example.pharmassist.exception.AdminNotFoundByIdException;
-import com.example.pharmassist.exception.PharmacyNotFoundException;
+import com.example.pharmassist.exception.NoPharmaciesFoundException;
+import com.example.pharmassist.exception.PharmacyNotFoundByIdException;
 import com.example.pharmassist.mapper.PharmacyMapper;
 import com.example.pharmassist.repository.AdminRepository;
 import com.example.pharmassist.repository.PharmacyRepository;
@@ -43,21 +44,32 @@ public class PharmacyService
 
 	public PharmacyResponse findPharmacyByAdminId(String adminId)
 	{
-		Admin admin=adminRepository.findById(adminId)
-				.orElseThrow(() -> new AdminNotFoundByIdException("Failed to Find Admin"));
+				return adminRepository.findById(adminId)
+						.map(Admin::getPharmacy)  // Extract the pharmacy from the admin
+						.map(pharmacyMapper::mapToPharmacyResponse)  // Map Pharmacy to PharmacyResponse
+						.orElseThrow(() -> new NoPharmaciesFoundException("No Pharmacy associated with admin ID:"+adminId));
+				
+				/*
+				 * Admin admin=adminRepository.findById(adminId) .orElseThrow(() -> new
+				 * AdminNotFoundByIdException("Failed to Find Admin"));
+				 * 
+				 * Pharmacy pharmacy=adminRepository.findPharmacyByAdminId(adminId);
+				 * if(pharmacy==null) { throw new
+				 * PharmacyNotFoundByIdException("No Pharmacy associated with admin ID:"+adminId
+				 * ); } return pharmacyMapper.mapToPharmacyResponse(pharmacy);
+				 */
 
-		Pharmacy pharmacy=adminRepository.findPharmacyByAdminId(adminId);
-		if(pharmacy==null)
-		{
-			throw new PharmacyNotFoundException("No Pharmacy associated with admin ID:"+adminId);
-		}
-		return pharmacyMapper.mapToPharmacyResponse(pharmacy);
+	}
 
-		//		return adminRepository.findById(adminId)
-		//				.map(Admin::getPharmacy)  // Extract the pharmacy from the admin
-		//				.map(pharmacyMapper::mapToPharmacyResponse)  // Map Pharmacy to PharmacyResponse
-		//				.orElseThrow(() -> new PharmacyNotFoundException("No Pharmacy associated with admin ID:"+adminId));
-
+	public PharmacyResponse updatePharmacy(PharmacyRequest pharmacyRequest,String pharmacyId)
+	{
+		return pharmacyRepository.findById(pharmacyId)
+				.map(exPharmacy ->{
+					pharmacyMapper.mapToPharmacy(pharmacyRequest, exPharmacy);
+					return pharmacyRepository.save(exPharmacy);
+				})
+				.map(pharmacyMapper::mapToPharmacyResponse)
+				.orElseThrow(() -> new PharmacyNotFoundByIdException("Failed to find Pharmacy by Id"));
 	}
 
 }

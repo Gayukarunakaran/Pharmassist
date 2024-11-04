@@ -19,7 +19,7 @@ public class AdminExceptionHandler {
 	}
 
 	@ExceptionHandler(AdminNotFoundByIdException.class)
-	public static <T> ResponseEntity<ErrorStructure<String>> handleUserNotFoundById(AdminNotFoundByIdException ex) {
+	public static <T> ResponseEntity<ErrorStructure<String>> handleAdminNotFoundById(AdminNotFoundByIdException ex) {
 		
 		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Admin not found by Id");
 

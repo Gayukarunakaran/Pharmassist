@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.pharmassist.exceptionhandler.FieldErrorExceptionHandler;
 import com.example.pharmassist.requestdtos.PharmacyRequest;
 import com.example.pharmassist.responsedtos.PharmacyResponse;
 import com.example.pharmassist.service.PharmacyService;
@@ -56,6 +58,28 @@ public class PharmacyController
 		PharmacyResponse response=pharmacyService.findPharmacyByAdminId(adminId);
 		return appResponseBuilder.success(HttpStatus.FOUND,"Pharmacy associated with admin found",response );
 	}
+	
+	
+	
+	@PutMapping("/pharmacies/{pharmacyId}")
+	@Operation(description = "The endpoint can be used to update the pharmacy based on the unique ID",
+	responses = {
+			@ApiResponse(responseCode = "302",description = "Pharmacy Found"),
+			@ApiResponse(responseCode = "400",description = "Bad Request",
+			content= {
+					@Content(schema= @Schema(implementation = FieldErrorExceptionHandler.class))
+			}),
+			@ApiResponse(responseCode = "404",description = "Pharmacy not found by ID",
+			content = {
+					@Content(schema = @Schema(implementation = ErrorStructure.class))
+			})
+})
+	public ResponseEntity<ResponseStructure<PharmacyResponse>> updatePharmacy(@RequestBody PharmacyRequest pharmacyRequest,@PathVariable String pharmacyId)
+	{
+		PharmacyResponse response=pharmacyService.updatePharmacy(pharmacyRequest, pharmacyId);
+		return appResponseBuilder.success(HttpStatus.OK,"Pharmacy Updated", response);
+	}
+
 
 
 
