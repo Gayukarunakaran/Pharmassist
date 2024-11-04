@@ -17,14 +17,14 @@ public class AdminService {
 	private final AdminRepository adminRepository;
 	private final AdminMapper adminMapper;
 
-	public AdminService(AdminRepository adminRepository,AppResponseBuilder appResponseBuilder,AdminMapper adminMapper)	{
+	public AdminService(AdminRepository adminRepository,AdminMapper adminMapper)	{
 		this.adminRepository=adminRepository;
 		this.adminMapper=adminMapper;
 	}
 
 	public AdminResponse addAdmin(AdminRequest adminRequest) {
 		
-		Admin admin=adminRepository.save(adminMapper.mapToAdmin(adminRequest, new Admin()));
+		Admin admin = adminRepository.save(adminMapper.mapToAdmin(adminRequest, new Admin()));
 		return adminMapper.mapToAdminResponse(admin);
 	}
 	
