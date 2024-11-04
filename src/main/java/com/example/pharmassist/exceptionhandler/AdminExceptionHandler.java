@@ -10,10 +10,10 @@ import com.example.pharmassist.util.AppResponseBuilder;
 import com.example.pharmassist.util.ErrorStructure;
 
 @RestControllerAdvice
-public class UserExceptionHandler {
+public class AdminExceptionHandler {
 	private final AppResponseBuilder appResponseBuilder;
 
-	public UserExceptionHandler(AppResponseBuilder appResponseBuilder)	{
+	public AdminExceptionHandler(AppResponseBuilder appResponseBuilder)	{
 		super();
 		this.appResponseBuilder = appResponseBuilder;
 	}
@@ -21,7 +21,7 @@ public class UserExceptionHandler {
 	@ExceptionHandler(AdminNotFoundByIdException.class)
 	public static <T> ResponseEntity<ErrorStructure<String>> handleUserNotFoundById(AdminNotFoundByIdException ex) {
 		
-		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"User not found by Id");
+		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Admin not found by Id");
 
 	}
 
