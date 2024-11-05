@@ -20,7 +20,7 @@ public class PharmacyExceptionHandler {
 	}
 
 	@ExceptionHandler(PharmacyNotFoundByIdException.class)
-	public static <T> ResponseEntity<ErrorStructure<String>> handlePharmachyNotFoundById(PharmacyNotFoundByIdException ex) {
+	public static <T> ResponseEntity<ErrorStructure<String>> handlePharmacyNotFoundById(PharmacyNotFoundByIdException ex) {
 		
 		return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(),"Pharmacy not found by Id");
 
