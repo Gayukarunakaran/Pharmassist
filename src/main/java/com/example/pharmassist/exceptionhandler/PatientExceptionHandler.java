@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.pharmassist.exception.NoPatientsFoundException;
+import com.example.pharmassist.exception.PatientNotFoundByIdException;
 import com.example.pharmassist.util.AppResponseBuilder;
 import com.example.pharmassist.util.ErrorStructure;
 
@@ -21,5 +22,10 @@ public class PatientExceptionHandler {
     @ExceptionHandler(NoPatientsFoundException.class)
     public static <T> ResponseEntity<ErrorStructure<String>> handleNoPatientsFoundException(NoPatientsFoundException ex) {
         return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(), "No patients found for the given Pharmacy ID");
+    }
+    
+    @ExceptionHandler(PatientNotFoundByIdException.class)
+    public static <T> ResponseEntity<ErrorStructure<String>> handlePatientNotFoundByIdException(PatientNotFoundByIdException ex) {
+        return AppResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(), "Patient found by Id");
     }
 }
