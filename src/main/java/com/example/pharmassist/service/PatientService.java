@@ -48,12 +48,12 @@ public class PatientService
 
 	public List<PatientResponse> findAllPatientByPharmacyId(String pharmacyId) {
 	    return pharmacyRepository.findById(pharmacyId)
-	        .map(pharmacy -> patientRepository.findPatientByPharmacyId(pharmacyId))
+	        .map(pharmacy -> patientRepository.findByPharmacy(pharmacy))
 	        .filter(patients -> !patients.isEmpty())
 	        .orElseThrow(() -> new NoPatientsFoundException("No patients associated with the pharmacyID: " + pharmacyId))
 	        .stream()
 	        .map(patientMapper::mapToPatientResponse)
-	        .collect(Collectors.toList());
+	        .toList();
 	}
 
 	public PatientResponse updatePatient(PatientRequest patientRequest, String patientId) {
