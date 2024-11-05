@@ -9,6 +9,7 @@ import com.example.pharmassist.entity.Patient;
 import com.example.pharmassist.entity.Pharmacy;
 import com.example.pharmassist.exception.NoPatientsFoundException;
 import com.example.pharmassist.exception.NoPharmaciesFoundException;
+import com.example.pharmassist.exception.PatientNotFoundByIdException;
 import com.example.pharmassist.exception.PharmacyNotFoundByIdException;
 import com.example.pharmassist.mapper.PatientMapper;
 import com.example.pharmassist.repository.PatientRepository;
@@ -54,5 +55,18 @@ public class PatientService
 	        .map(patientMapper::mapToPatientResponse)
 	        .collect(Collectors.toList());
 	}
+
+	public PatientResponse updatePatient(PatientRequest patientRequest, String patientId) {
+	    return patientRepository.findById(patientId)
+	        .map(exPatient -> {
+	            patientMapper.mapToPatient(patientRequest, exPatient);
+	            return patientRepository.save(exPatient);
+	        })
+	        .map(patientMapper::mapToPatientResponse)
+	        .orElseThrow(() -> new PatientNotFoundByIdException("Failed to find Patient by Id"));
+	}
+
+
+
 
 }
