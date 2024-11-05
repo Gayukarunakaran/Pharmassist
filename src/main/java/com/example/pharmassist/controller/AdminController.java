@@ -51,7 +51,7 @@ public class AdminController {
 					@Content(schema = @Schema(implementation = ErrorStructure.class))
 			})
     })
-	public ResponseEntity<ResponseStructure<AdminResponse>> findUser(@PathVariable String adminId)
+	public ResponseEntity<ResponseStructure<AdminResponse>> findAdmin(@PathVariable String adminId)
 	{
 		AdminResponse adminResponse=adminService.findAdmin(adminId);
 		return appResponseBuilder.success(HttpStatus.FOUND,"Admin is found",adminResponse);
@@ -71,7 +71,7 @@ public class AdminController {
 					@Content(schema = @Schema(implementation = ErrorStructure.class))
 			})
     })
-	public ResponseEntity<ResponseStructure<AdminResponse>> updateUser(@RequestBody AdminRequest adminRequest,@PathVariable String adminId)
+	public ResponseEntity<ResponseStructure<AdminResponse>> updateAdmin(@RequestBody AdminRequest adminRequest,@PathVariable String adminId)
 	{
 		AdminResponse adminResponse= adminService.updateAdmin(adminRequest, adminId);
 		return appResponseBuilder.success(HttpStatus.OK,"Admin Updated", adminResponse);
